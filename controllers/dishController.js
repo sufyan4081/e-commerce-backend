@@ -14,7 +14,10 @@ const createDish = async (req, res) => {
       });
     }
 
-    const Item = await Dish.create(req.body);
+    // Add isActive: true to the data object
+    const dishData = { ...req.body, isActive: true };
+
+    const Item = await Dish.create(dishData);
 
     res.status(201).json({
       success: true,
