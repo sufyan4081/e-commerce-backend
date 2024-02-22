@@ -1,37 +1,41 @@
 import Dish from "../model/dish.js";
+import multiparty from "multiparty";
 
-// create new dish
+const IMAGE_UPLOAD_DIR = "./public/images";
+const IMAGE_BASE_URL = "http://192.168.1.12:5000/images/";
+
 const createDish = async (req, res) => {
-  // for checking title, name, desc, price must be required
   try {
-    if (
-      (!req.body.title && !req.body.name && !req.body.description,
-      !req.body.price && !req.body.quantity)
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "title/name/description/price are required",
+    let form = new multiparty.Form({ uploadDir: IMAGE_UPLOAD_DIR });
+
+    form.parse(req, async function (err, fields, files) {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+
+      const imagePath = files.image[0].path;
+      const imageFileName = imagePath.slice(imagePath.lastIndexOf("\\") + 1);
+      const imageURL = IMAGE_BASE_URL + imageFileName;
+
+      const dish = new Dish({
+        title: fields.title[0],
+        name: fields.name[0],
+        description: fields.description[0],
+        price: fields.price[0],
+        rating: fields.rating[0],
+        isActive: true,
+        image: imageURL,
       });
-    }
 
-    // Add isActive: true to the data object
-    const dishData = { ...req.body, isActive: true };
-
-    const Item = await Dish.create(dishData);
-
-    res.status(201).json({
-      success: true,
-      Item,
+      const savedDish = await dish.save();
+      res.status(201).json({ success: true, dish: savedDish });
     });
   } catch (error) {
-    if (error) {
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
-    }
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 const fetchAllDish = async (req, res) => {
   try {
     const Item = await Dish.find();
