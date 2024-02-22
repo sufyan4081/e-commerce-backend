@@ -13,8 +13,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
-// Serve static files from the "public" directory
-app.use("/images", express.static(join(__dirname, "public")));
+// Serve static files from the "public/images" directory
+app.use(express.static(join(__dirname, IMAGE_UPLOAD_DIR)));
 
 // Your other routes and middleware...
 
@@ -29,7 +29,7 @@ const createDish = async (req, res) => {
 
       const imagePath = files.image[0].path;
       const imageFileName = imagePath.slice(imagePath.lastIndexOf("\\") + 1);
-      const imageURL = `${IMAGE_BASE_URL}/images/${imageFileName}`;
+      const imageURL = `${IMAGE_BASE_URL}/${imageFileName}`;
 
       const dish = new Dish({
         title: fields.title[0],
