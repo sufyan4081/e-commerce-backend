@@ -1,9 +1,22 @@
 import Dish from "../model/dish.js";
 import multiparty from "multiparty";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 const IMAGE_UPLOAD_DIR = "./public/images";
-// const IMAGE_BASE_URL = "http://192.168.1.12:5000/images/";
 const IMAGE_BASE_URL = "https://e-commerce-backend-x4mx.onrender.com/images/";
+
+// Get the directory path of the current module file
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const app = express();
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, "public")));
+
+// Your other routes and middleware...
 
 const createDish = async (req, res) => {
   try {
