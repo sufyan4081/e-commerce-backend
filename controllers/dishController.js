@@ -2,7 +2,8 @@ import Dish from "../model/dish.js";
 import multiparty from "multiparty";
 
 const IMAGE_UPLOAD_DIR = "./public/images";
-const IMAGE_BASE_URL = "http://192.168.1.12:5000/images/";
+// const IMAGE_BASE_URL = "http://192.168.1.12:5000/images/";
+const IMAGE_BASE_URL = "https://e-commerce-backend-x4mx.onrender.com/images/";
 
 const createDish = async (req, res) => {
   try {
