@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
 const IMAGE_UPLOAD_DIR = "./public/images";
-const IMAGE_BASE_URL = "https://e-commerce-backend-x4mx.onrender.com/images/";
+const IMAGE_BASE_URL = "https://e-commerce-backend-x4mx.onrender.com";
 
 // Get the directory path of the current module file
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -14,7 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 // Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(join(__dirname, "public")));
 
 // Your other routes and middleware...
 
@@ -29,7 +29,7 @@ const createDish = async (req, res) => {
 
       const imagePath = files.image[0].path;
       const imageFileName = imagePath.slice(imagePath.lastIndexOf("\\") + 1);
-      const imageURL = IMAGE_BASE_URL + imageFileName;
+      const imageURL = `${IMAGE_BASE_URL}/images/${imageFileName}`;
 
       const dish = new Dish({
         title: fields.title[0],
