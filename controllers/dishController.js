@@ -1,12 +1,11 @@
 import Dish from "../model/dish.js";
 import multiparty from "multiparty";
 import express from "express";
-import path from "path";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import fs from "fs";
 
 const IMAGE_UPLOAD_DIR = "./public/images";
-const IMAGE_BASE_URL = "https://e-commerce-backend-x4mx.onrender.com";
 
 // Get the directory path of the current module file
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -16,20 +15,24 @@ const app = express();
 // Serve static files from the "public/images" directory
 app.use(express.static(join(__dirname, IMAGE_UPLOAD_DIR)));
 
-// Your other routes and middleware...
-
 const createDish = async (req, res) => {
   try {
-    let form = new multiparty.Form({ uploadDir: IMAGE_UPLOAD_DIR });
+    let form = new multiparty.Form();
 
     form.parse(req, async function (err, fields, files) {
       if (err) {
         return res.status(400).json({ error: err.message });
       }
 
-      const imagePath = files.image[0].path;
-      const imageFileName = imagePath.slice(imagePath.lastIndexOf("\\") + 1);
-      const imageURL = `${IMAGE_BASE_URL}/${imageFileName}`;
+      // Assuming the image is uploaded and stored in the 'image' field
+      const imageFile = files.image[0];
+
+      // Read the image file and convert it to base64
+      const imageBuffer = fs.readFileSync(imageFile.path);
+      const base64Image = imageBuffer.toString("base64");
+
+      // Construct the base64 image URL
+      const imageURL = `data:${imageFile.headers["content-type"]};base64,${base64Image}`;
 
       const dish = new Dish({
         title: fields.title[0],
