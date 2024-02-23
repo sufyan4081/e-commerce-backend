@@ -171,10 +171,42 @@ const findDishById = async (req, res) => {
   }
 };
 
+const findDishByCriteria = async (req, res) => {
+  try {
+    const { title, price } = req.query;
+
+    // Construct the filter object based on the provided criteria
+    const filter = {};
+    if (title) {
+      filter.title = { $regex: title, $options: "i" }; // Case-insensitive search for title
+    }
+    if (price !== undefined && !isNaN(price)) {
+      filter.price = { $lte: parseFloat(price) }; // Filter dishes with price less than or equal to the specified price
+    }
+
+    const filteredDishes = await Dish.find(filter);
+    if (filteredDishes.length > 0) {
+      res.status(200).json({
+        success: true,
+        filteredDishes,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "No dishes found matching the criteria",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 export default {
   createDish,
   fetchAllDish,
   updateDish,
   deleteDish,
   findDishById,
+  findDishByCriteria,
 };

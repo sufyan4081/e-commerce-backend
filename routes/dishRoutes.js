@@ -18,4 +18,7 @@ dishRouter.delete("/deleteDish/:id", dishController.deleteDish);
 // for dish find by id
 dishRouter.get("/findDishById/:id", dishController.findDishById);
 
+// for dish find by criteria
+dishRouter.get("/findDishByCriteria/filter", dishController.findDishByCriteria);
+
 export default dishRouter;
