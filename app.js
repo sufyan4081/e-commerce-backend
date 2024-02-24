@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db.js";
 import dishRouter from "./routes/dishRoutes.js";
+import recipeRouter from "./routes/recipeRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,9 @@ connectDB();
 
 // import dish
 app.use("/api/dish", dishRouter);
+
+// import recipe
+app.use("/api/recipe", recipeRouter);
 
 // Start the server
 app.listen(PORT, () => {
