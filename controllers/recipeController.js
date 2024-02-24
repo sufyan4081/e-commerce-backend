@@ -32,7 +32,11 @@ const fetchAllRecipe = async (req, res) => {
 
 const updateRecipe = async (req, res) => {
   try {
-    const Item = await Recipe.findByIdAndUpdate(req.params.id);
+    const Item = await Recipe.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      useFindAndModify: true,
+      runValidators: true,
+    });
 
     if (Item) {
       res.status(200).json({
